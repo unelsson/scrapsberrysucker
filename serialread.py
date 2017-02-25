@@ -4,7 +4,7 @@ import time
 import serial
        
       
-readserial = serial.Serial(
+ser = serial.Serial(
   port='/dev/ttyUSB0',
   baudrate = 9600,
   parity=serial.PARITY_NONE,
