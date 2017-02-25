@@ -6,9 +6,9 @@ import serialread
 import time
 
 while 1:
-  os.system('clear');
-  print('START');
   x = serialread.ser.readline();
+  if x = 'END OF DATA' os.system('clear');
+  print('START');
   try:
     x = int(x)
     if int(x) >= 0 & int(x) <= 500:
