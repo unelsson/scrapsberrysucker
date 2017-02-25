@@ -14,7 +14,7 @@ while 1:
       print x;
       for i in range(0, x):
         i=i+25;
-        print '#',;
+        print ('#', sep='');
   except ValueError:
     print "Invalid read"
   print "END";
