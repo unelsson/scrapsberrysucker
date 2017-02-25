@@ -2,4 +2,4 @@
 import serialread
 
 while 1:
-               print readserial();
+               print readserial;
