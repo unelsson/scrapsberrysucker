@@ -11,6 +11,7 @@ while 1:
   try:
     x = int(x)
     if int(x) >= 0 & int(x) <= 256:
+      print x;
       for i in range(0, x):
         i=i+25;
         print "#",;
