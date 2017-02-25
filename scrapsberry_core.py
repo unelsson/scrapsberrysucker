@@ -1,4 +1,5 @@
 #!/usr/bin/python
 import serialread
 
-print readserial();
+while 1:
+               print readserial();
