@@ -9,4 +9,6 @@ while 1:
     for i in range(0, x):
       x=x+25;
       printf("#");
+  else:
+    print x;
   print '';
