@@ -17,5 +17,5 @@ while 1:
       for i in range(0, x, 25):
         print ('#', end='');
   except ValueError:
-    # print('Invalid read');
+    print('Invalid read');
   time.sleep(0.01);
