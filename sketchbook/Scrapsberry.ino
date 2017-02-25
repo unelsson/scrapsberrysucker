@@ -31,7 +31,7 @@ void irscan() {
 void sendserial() {
 	int i = 0;
 	for (i = 0; i <= 18; i += 1) {
-		Serial.print(sensorValue[i]);
+		Serial.println(sensorValue[i]);
 		delay(2);				// Delay for Serial data
 	}
 		Serial.println("END OF DATA");
