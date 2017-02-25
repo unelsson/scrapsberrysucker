@@ -7,5 +7,5 @@ while 1:
   x = serialread.ser.readline();
   for i in range(0, x):
     x=x+25;
-    printf "#";
-  print "";
+    printf("#");
+  print '';
