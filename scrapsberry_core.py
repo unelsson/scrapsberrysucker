@@ -7,16 +7,15 @@ import time
 
 while 1:
   x = serialread.ser.readline();
+  print x;
   if x == 'END OF DATA':
     os.system('clear');
-  print('START');
   try:
     x = int(x)
     if int(x) >= 0 & int(x) <= 500:
-      print(x);
+      # print(x);
       for i in range(0, x, 25):
-        print ('#', end='');
+        # print ('#', end='');
   except ValueError:
-    print('Invalid read');
-  print('END');
+    # print('Invalid read');
   time.sleep(0.01);
