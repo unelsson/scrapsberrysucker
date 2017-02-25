@@ -6,14 +6,15 @@ import time
 
 while 1:
   os.system('clear');
+  print "START";
   x = serialread.ser.readline();
   try:
     x = int(x)
     if int(x) >= 0 & int(x) <= 256:
       for i in range(0, x):
-        x=x+25;
-        print x,;
+        i=i+25;
+        print "#",;
   except ValueError:
     print "Invalid read"
-  print '';
+  print "END";
   time.sleep(0.01);
