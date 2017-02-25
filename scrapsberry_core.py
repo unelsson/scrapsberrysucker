@@ -10,11 +10,11 @@ while 1:
   x = serialread.ser.readline();
   try:
     x = int(x)
-    if int(x) >= 0 & int(x) <= 256:
+    if int(x) >= 0 & int(x) <= 500:
       print x;
       for i in range(0, x):
         i=i+25;
-        print "#",;
+        print '#',;
   except ValueError:
     print "Invalid read"
   print "END";
