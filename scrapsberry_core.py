@@ -7,7 +7,8 @@ import time
 
 while 1:
   x = serialread.ser.readline();
-  if x = 'END OF DATA' os.system('clear');
+  if x == 'END OF DATA':
+    os.system('clear');
   print('START');
   try:
     x = int(x)
