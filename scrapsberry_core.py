@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import os
+import sys
 import serialread
+import time
 
 while 1:
   os.system('clear');
@@ -14,3 +16,4 @@ while 1:
   except ValueError:
     print "Invalid read"
   print '';
+  sleep(0.01);
