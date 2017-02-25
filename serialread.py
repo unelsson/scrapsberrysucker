@@ -5,7 +5,7 @@
            import serial
        
       
-           serialread = serial.Serial(
+           readserial = serial.Serial(
               
                port='/dev/ttyUSB0',
                baudrate = 9600,
