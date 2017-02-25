@@ -5,6 +5,7 @@ Servo irservo;
 
 int servoPos = 0;		// Servo for IRsensor, position in degrees
 int sensorValue[18];		// IR sensor read value
+int movemode = 0;
 
 void setup() {
   Serial.begin(9600);		// Initialize serial com at 9600bps
@@ -37,24 +38,37 @@ void sendserial() {
 		Serial.println("END OF DATA");
 }
 
-void testmotors() {
-	analogWrite(3, 255); 
-	analogWrite(6, 0);
-	analogWrite(10, 255);
-	analogWrite(11, 0);
-	delay(5000);
-
-	analogWrite(3, 0); // STOP
-	analogWrite(6, 0);
-	analogWrite(10, 0);
-	analogWrite(11, 0);
-	delay(1000);
+void motors() {
+	if(movemode==0){
+		analogWrite(3, 150); 
+		analogWrite(6, 0);
+		analogWrite(10, 150);
+		analogWrite(11, 0);
+	}
+	if(movemode==1){
+		analogWrite(3, 0); 
+		analogWrite(6, 0);
+		analogWrite(10, 0);
+		analogWrite(11, 0);
+	}
+	if(movemode==2){
+		analogWrite(3, 150); 
+		analogWrite(6, 0);
+		analogWrite(10, 0);
+		analogWrite(11, 0);
+	}
+	if(movemode==3){
+		analogWrite(3, 0); 
+		analogWrite(6, 0);
+		analogWrite(10, 150);
+		analogWrite(11, 0);
+	}
 }
 
 void loop() {
 	sendserial();	 // Send information via Serial connection
 	irscan();	 // Do a full IR sweep
-	testmotors();	
+	motors();	 // Update OUT pin signals for motors	
 
 	//Blink leds for debug
 	digitalWrite(13, HIGH);
