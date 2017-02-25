@@ -1,9 +1,9 @@
 #!/usr/bin/python
+from __future__ import print_function
 import os
 import sys
 import serialread
 import time
-from __future__ import print_function
 
 while 1:
   os.system('clear');
