@@ -13,9 +13,9 @@ while 1:
   try:
     x = int(x)
     if int(x) >= 0 & int(x) <= 500:
-      # print(x);
+      print(x);
       for i in range(0, x, 25):
-        # print ('#', end='');
+        print ('#', end='');
   except ValueError:
     # print('Invalid read');
   time.sleep(0.01);
