@@ -3,6 +3,7 @@ import os
 import sys
 import serialread
 import time
+from __future__ import print_function
 
 while 1:
   os.system('clear');
@@ -14,7 +15,7 @@ while 1:
       print x;
       for i in range(0, x):
         i=i+25;
-        print ('#', sep='');
+        print ('#', end='');
   except ValueError:
     print "Invalid read"
   print "END";
