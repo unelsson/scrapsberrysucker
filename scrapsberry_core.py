@@ -2,5 +2,5 @@
 import serialread
 
 while 1:
-  x = serialread.readline();
+  x = serialread.ser.readline();
   print x;
