@@ -7,7 +7,7 @@ from __future__ import print_function
 
 while 1:
   os.system('clear');
-  print "START";
+  print('START');
   x = serialread.ser.readline();
   try:
     x = int(x)
@@ -17,6 +17,6 @@ while 1:
         i=i+25;
         print ('#', end='');
   except ValueError:
-    print "Invalid read"
-  print "END";
+    print('Invalid read');
+  print('END');
   time.sleep(0.01);
