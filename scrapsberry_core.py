@@ -7,8 +7,7 @@ while 1:
   x = serialread.ser.readline();
   try:
     x = int(x)
-    if int(x) >= 0 &
-    int(x) <= 256:
+    if int(x) >= 0 & int(x) <= 256:
     for i in range(0, x):
       x=x+25;
       printf("#");  
