@@ -5,7 +5,8 @@ import serialread
 while 1:
   os.system('clear');
   x = serialread.ser.readline();
-  for i in range(0, x):
-    x=x+25;
-    printf("#");
+  if int x >= 0 && x <= 256:
+    for i in range(0, x):
+      x=x+25;
+      printf("#");
   print '';
