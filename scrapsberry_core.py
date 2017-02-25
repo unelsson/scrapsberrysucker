@@ -12,7 +12,7 @@ while 1:
     if int(x) >= 0 & int(x) <= 256:
       for i in range(0, x):
         x=x+25;
-        print 'x',;
+        print x,;
   except ValueError:
     print "Invalid read"
   print '';
