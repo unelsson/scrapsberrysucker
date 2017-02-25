@@ -52,7 +52,7 @@ void testmotors() {
 }
 
 void loop() {
-	//sendserial();	 Send information via Serial connection
+	sendserial();	 Send information via Serial connection
 	irscan();	 // Do a full IR sweep
 	testmotors();	
 
