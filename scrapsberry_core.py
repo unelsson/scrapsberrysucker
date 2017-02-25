@@ -13,8 +13,7 @@ while 1:
     x = int(x)
     if int(x) >= 0 & int(x) <= 500:
       print(x);
-      for i in range(0, x):
-        i=i+50;
+      for i in range(0, x, 25):
         print ('#', end='');
   except ValueError:
     print('Invalid read');
