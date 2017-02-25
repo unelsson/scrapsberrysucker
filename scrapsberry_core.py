@@ -16,4 +16,4 @@ while 1:
   except ValueError:
     print "Invalid read"
   print '';
-  sleep(0.01);
+  time.sleep(0.01);
