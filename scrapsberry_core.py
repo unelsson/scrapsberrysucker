@@ -7,7 +7,7 @@ import time
 
 while 1:
   x = serialread.ser.readline();
-  print x;
+  print(x);
   if x == 'END OF DATA':
     os.system('clear');
   try:
