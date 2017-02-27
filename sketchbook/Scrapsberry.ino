@@ -71,14 +71,14 @@ void motors() {
 		analogWrite(6, 0);
 		analogWrite(10, 0);
 		analogWrite(11, 255);
-		delay(50);
+		delay(10);
 	}
 	if(movemode==3){
 		analogWrite(3, 0); 
 		analogWrite(6, 255);
 		analogWrite(10, 255);
 		analogWrite(11, 0);
-		delay(50);
+		delay(10);
 	}
 	if(movemode==4){
 		analogWrite(3, 0); 
@@ -95,14 +95,4 @@ void loop() {
 	readserial();
 	//irscan();	 // Do a full IR sweep
 	motors();	 // Update OUT pin signals for motors	
-
-	//Blink leds for debug
-	digitalWrite(13, HIGH);
-	delay(250);
-	digitalWrite(13, LOW);
-	delay(250);
-	digitalWrite(13, HIGH);
-	delay(250);
-	digitalWrite(13, LOW);
-	delay(250);
 }
