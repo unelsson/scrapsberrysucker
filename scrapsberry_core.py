@@ -25,16 +25,16 @@ while 1:
   print(ch)
   if ch=="w":
     print("Pressed w")
-    serialrw.ser.write(1)
+    serialrw.ser.write('1')
   if ch=="a":
     print("Pressed a")
-    serialrw.ser.write(2)
+    serialrw.ser.write('2')
   if ch=="s":
     print("Pressed s")
-    serialrw.ser.write(3)
+    serialrw.ser.write('3')
   if ch=="d":
     print("Pressed d")
-    serialrw.ser.write(4)
+    serialrw.ser.write('4')
   if ch=="q":  
     break
   ## try:
