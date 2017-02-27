@@ -51,7 +51,7 @@ void readserial() {
 	if ( serreadchar == 'x' ) movemode = 4; // Stop (force)
 	if ( serreadchar == 'g' ) {		// IR scan and send data
 		irscan();
-		sendserial;
+		sendserial();
 	}
 }
 
