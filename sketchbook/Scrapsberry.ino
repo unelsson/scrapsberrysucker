@@ -69,11 +69,11 @@ void motors() {
 		analogWrite(3, 255); 
 		analogWrite(6, 0);
 		analogWrite(10, 0);
-		analogWrite(11, 0);
+		analogWrite(11, 255);
 	}
 	if(movemode==3){
 		analogWrite(3, 0); 
-		analogWrite(6, 0);
+		analogWrite(6, 255);
 		analogWrite(10, 255);
 		analogWrite(11, 0);
 	}
@@ -83,7 +83,7 @@ void motors() {
 		analogWrite(10, 0);
 		analogWrite(11, 0);
 	}
-	delay(500);
+	delay(300);
 	movemode=4;
 }
 
