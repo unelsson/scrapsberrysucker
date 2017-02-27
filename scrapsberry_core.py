@@ -20,7 +20,7 @@ def read_ch():
 
 while 1:
   x = serialrw.ser.readline()
-  ##print(x)
+  print(x)
   ch = read_ch()
   print(ch)
   if ch=="w":
