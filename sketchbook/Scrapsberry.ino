@@ -5,7 +5,7 @@ Servo irservo;
 
 int servoPos = 0;		// Servo for IRsensor, position in degrees
 int sensorValue[18];		// IR sensor read value
-int movemode = 0;
+int movemode = 4;
 
 void setup() {
   Serial.begin(9600);		// Initialize serial com at 9600bps
@@ -39,7 +39,8 @@ void sendserial() {
 }
 
 void readserial() {
-	if ( Serial.read != -1 ) movemode = Serial.read();
+	serreadvalue = Serial.read()
+	if ( serreadvalue != -1 ) movemode = serreadvalue;
 }
 
 void motors() {
@@ -74,6 +75,7 @@ void motors() {
 		analogWrite(11, 0);
 	}
 	delay(1000);
+	movemode=4;
 }
 
 void loop() {
