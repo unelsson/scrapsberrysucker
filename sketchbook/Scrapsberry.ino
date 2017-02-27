@@ -40,7 +40,17 @@ void sendserial() {
 
 void readserial() {
 	int serreadvalue = Serial.read();
-	if ( serreadvalue != -1 ) movemode = serreadvalue;
+	if ( serreadvalue != -1 ) {
+		movemode = serreadvalue;
+		digitalWrite(13, HIGH);
+		delay(1000);
+		digitalWrite(13, LOW);
+		delay(1000);
+		digitalWrite(13, HIGH);
+		delay(1000);
+		digitalWrite(13, LOW);
+		delay(1000);
+	}
 }
 
 void motors() {
