@@ -26,13 +26,13 @@ while 1:
   print(ch)
   if ch=="w":
     print("Pressed w")
-    serialrw.ser.write(b'0')
+    serialrw.ser.write(str(0))
   if ch=="a":
     print("Pressed a")
-    serialrw.ser.write(b'1')
+    serialrw.ser.write(1)
   if ch=="s":
     print("Pressed s")
-    serialrw.ser.write(b'2')
+    serialrw.ser.write(str(2))
   if ch=="d":
     print("Pressed d")
     serialrw.ser.write(b'3')
