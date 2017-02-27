@@ -53,9 +53,9 @@ void readserial() {
 
 void motors() {
 	if(movemode==0){
-		analogWrite(3, 150); 
+		analogWrite(3, 255); 
 		analogWrite(6, 0);
-		analogWrite(10, 150);
+		analogWrite(10, 255);
 		analogWrite(11, 0);
 		irscan();
 	}
@@ -66,7 +66,7 @@ void motors() {
 		analogWrite(11, 150);
 	}
 	if(movemode==2){
-		analogWrite(3, 150); 
+		analogWrite(3, 255); 
 		analogWrite(6, 0);
 		analogWrite(10, 0);
 		analogWrite(11, 0);
@@ -74,7 +74,7 @@ void motors() {
 	if(movemode==3){
 		analogWrite(3, 0); 
 		analogWrite(6, 0);
-		analogWrite(10, 150);
+		analogWrite(10, 255);
 		analogWrite(11, 0);
 	}
 	if(movemode==4){
@@ -83,7 +83,7 @@ void motors() {
 		analogWrite(10, 0);
 		analogWrite(11, 0);
 	}
-	delay(1000);
+	delay(500);
 	movemode=4;
 }
 
