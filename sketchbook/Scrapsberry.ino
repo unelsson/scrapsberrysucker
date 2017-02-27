@@ -39,7 +39,7 @@ void sendserial() {
 }
 
 void readserial() {
-	serreadvalue = Serial.read();
+	int serreadvalue = Serial.read();
 	if ( serreadvalue != -1 ) movemode = serreadvalue;
 }
 
