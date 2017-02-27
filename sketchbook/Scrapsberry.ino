@@ -41,8 +41,8 @@ void sendserial() {
 void readserial() {
 	int serreadvalue = -1;
 	while (Serial.available()) {
-    		char serreadchar = (char)Serial.read();
-		serreadvalue = serreadchar;
+    		String serreadstr = Serial.readString();
+		serreadvalue = serreadstr;
   	}
 	if ( serreadvalue != -1 ) {
 		movemode = serreadvalue;
