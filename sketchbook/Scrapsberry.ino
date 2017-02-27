@@ -43,7 +43,7 @@ void readserial() {
 	int serreadvalue = -1;
 	while (Serial.available()) {
     		String serreadstr = Serial.readString();
-		serreadvalue = StringToInt(serreadstr);
+		serreadvalue = serreadstr.toInt();
   	}
 	if ( serreadvalue != -1 ) {
 		movemode = serreadvalue;
