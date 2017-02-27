@@ -1,4 +1,5 @@
 #include <Servo.h>
+#include <String.h>
 
 const int analogInPin = A0;	// Analog input pin that the IR sensor is attached to
 Servo irservo;
