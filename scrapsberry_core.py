@@ -8,7 +8,7 @@ import time
 import cv2
 import numpy as np
 
-def read_ch()
+def read_ch():
   fd = sys.stdin.fileno()
   old_settings = termios.tcgetaddr(fd)
   try:
