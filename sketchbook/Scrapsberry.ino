@@ -55,7 +55,7 @@ void readserial() {
 		digitalWrite(13, LOW);
 		delay(500);
 		Serial.println(serreadvalue);
-		Serial.println("Test", 0, 1, 2, 3, 4);
+		Serial.println("Test");
 	}
 }
 
