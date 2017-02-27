@@ -19,13 +19,13 @@ while 1:
   if k==2621440:
     print('DOWN')
   time.sleep(1)
-  try:
-    x = int(x)
-    if int(x) >= 0 & int(x) <= 500:
-      for i in range(0, x, 25):
-        print ('#', end='')
-  except ValueError:
-    print('Invalid read')
-    time.sleep(0.5)
-    os.system('clear')
+  ## try:
+  ##  x = int(x)
+  ##  if int(x) >= 0 & int(x) <= 500:
+  ##    for i in range(0, x, 25):
+  ##      print ('#', end='')
+  ##except ValueError:
+  ##  print('Invalid read')
+  ##  time.sleep(0.5)
+  ##  os.system('clear')
   
