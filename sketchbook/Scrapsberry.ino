@@ -32,7 +32,7 @@ void irscan() {
 void sendserial() {
 	int i = 0;
 	for (i = 0; i <= 18; i += 1) {
-		Serial.println(sensorValue[i]);
+		Serial.println(sensorValue[i]);		// Send IR sensor values
 		delay(2);				// Delay for Serial data
 	}
 		Serial.println("END OF DATA");
@@ -41,14 +41,18 @@ void sendserial() {
 void readserial() {
 	char serreadchar = '\0';
 	if ( Serial.available() > 0 ) {
-    		serreadchar = Serial.read();
-		Serial.println(serreadchar); //debug info
+    		serreadchar = Serial.read(); // read command from Raspi
+		Serial.println(serreadchar); // debug info
   	}
-	if ( serreadchar == 'w' ) movemode = 0;
-	if ( serreadchar == 'a' ) movemode = 2;
-	if ( serreadchar == 's' ) movemode = 1;
-	if ( serreadchar == 'd' ) movemode = 3;
-	if ( serreadchar == 'x' ) movemode = 4;
+	if ( serreadchar == 'w' ) movemode = 0; // Forwads
+	if ( serreadchar == 'a' ) movemode = 2; // Left
+	if ( serreadchar == 's' ) movemode = 1; // Backwards
+	if ( serreadchar == 'd' ) movemode = 3; // Right
+	if ( serreadchar == 'x' ) movemode = 4; // Stop (force)
+	if ( serreadchar == 'g' ) {		// IR scan and send data
+		irscan();
+		sendserial;
+	}
 }
 
 void motors() {
@@ -57,28 +61,28 @@ void motors() {
 		analogWrite(6, 0);
 		analogWrite(10, 255);
 		analogWrite(11, 0);
-		delay(100);
+		delay(250);
 	}
 	if(movemode==1){
 		analogWrite(3, 0); 
 		analogWrite(6, 255);
 		analogWrite(10, 0);
 		analogWrite(11, 255);
-		delay(100);
+		delay(250);
 	}
 	if(movemode==2){
 		analogWrite(3, 255); 
 		analogWrite(6, 0);
 		analogWrite(10, 0);
 		analogWrite(11, 255);
-		delay(10);
+		delay(50);
 	}
 	if(movemode==3){
 		analogWrite(3, 0); 
 		analogWrite(6, 255);
 		analogWrite(10, 255);
 		analogWrite(11, 0);
-		delay(10);
+		delay(50);
 	}
 	if(movemode==4){
 		analogWrite(3, 0); 
