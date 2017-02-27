@@ -10,6 +10,7 @@ while 1:
   x = serialread.ser.readline()
   ##print(x)
   k = cv2.waitKey(33)
+  print k
   if k==2490368:
     print("UP")
   if k==2424832:
