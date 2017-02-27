@@ -8,7 +8,7 @@ import numpy as np
 
 while 1:
   x = serialread.ser.readline()
-  print(x)
+  ##print(x)
   k = cv2.waitKey(33)
   if k==2490368:
     print('UP')
@@ -18,7 +18,8 @@ while 1:
     print('RIGHT')
   if k==2621440:
     print('DOWN')
-  time.sleep(1)
+  if k==27:  
+    print('ESC')
   ## try:
   ##  x = int(x)
   ##  if int(x) >= 0 & int(x) <= 500:
