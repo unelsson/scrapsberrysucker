@@ -11,13 +11,13 @@ while 1:
   ##print(x)
   k = cv2.waitKey(33)
   if k==2490368:
-    print('UP')
+    print("UP")
   if k==2424832:
     print('LEFT')
   if k==2555904:
     print('RIGHT')
   if k==2621440:
-    print('DOWN')
+    print("DOWN")
   if k==27:  
     print('ESC')
   ## try:
