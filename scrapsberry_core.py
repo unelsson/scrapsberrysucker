@@ -36,6 +36,9 @@ while 1:
   if ch=="d":
     print("Pressed d")
     serialrw.ser.write(b'd')
+  if ch=="x":
+    print("Pressed x")
+    serialrw.ser.write(b'x')
   if ch=="q":  
     break
   ## try:
