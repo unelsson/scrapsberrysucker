@@ -39,7 +39,7 @@ void sendserial() {
 }
 
 void readserial() {
-	char serreadchar = '';
+	char serreadchar = '\0';
 	if ( Serial.available() > 0 ) {
     		serreadchar = Serial.read();
 		Serial.println(serreadchar); //debug info
