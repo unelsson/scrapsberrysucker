@@ -23,15 +23,15 @@ while 1:
   ##print(x)
   ch = read_ch()
   print(ch)
-  if k==2490368:
+  if ch==2490368:
     print("UP")
-  if k==2424832:
+  if ch==2424832:
     print('LEFT')
-  if k==2555904:
+  if ch==2555904:
     print('RIGHT')
-  if k==2621440:
+  if ch==2621440:
     print("DOWN")
-  if k==27:  
+  if ch==27:  
     print('ESC')
   ## try:
   ##  x = int(x)
