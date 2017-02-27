@@ -21,21 +21,21 @@ def read_ch():
 while 1:
   x = serialrw.ser.readline()
   print("Non-decoded:", x)
-  print("Decoded", x.decode('utf-8'))
+  print("Decoded", x.decode('ascii'))
   ch = read_ch()
   print(ch)
   if ch=="w":
     print("Pressed w")
-    serialrw.ser.write(bytes(0, 'UTF-8'))
+    serialrw.ser.write(b'w')
   if ch=="a":
     print("Pressed a")
-    serialrw.ser.write(bytes(1, 'UTF-8'))
+    serialrw.ser.write(b'a')
   if ch=="s":
     print("Pressed s")
-    serialrw.ser.write(bytes(2, 'UTF-8'))
+    serialrw.ser.write(b's')
   if ch=="d":
     print("Pressed d")
-    serialrw.ser.write(bytes(3, 'UTF-8'))
+    serialrw.ser.write(b'd')
   if ch=="q":  
     break
   ## try:
