@@ -42,7 +42,7 @@ void readserial() {
 	int serreadvalue = -1;
 	while (Serial.available()) {
     		char serreadchar = (char)Serial.read();
-		serreadvalue = toInt(serreadchar);
+		serreadvalue = serreadchar;
   	}
 	if ( serreadvalue != -1 ) {
 		movemode = serreadvalue;
