@@ -21,7 +21,7 @@ def read_ch():
 while 1:
   x = serialrw.ser.readline()
   print("Non-decoded:", x)
-  print("Decoded", x.decode('utf-8')
+  print("Decoded", x.decode('utf-8'))
   ch = read_ch()
   print(ch)
   if ch=="w":
