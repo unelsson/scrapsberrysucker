@@ -38,6 +38,10 @@ void sendserial() {
 		Serial.println("END OF DATA");
 }
 
+void readserial() {
+	if ( Serial.read != -1 ) movemode = Serial.read();
+}
+
 void motors() {
 	if(movemode==0){
 		analogWrite(3, 150); 
@@ -47,9 +51,9 @@ void motors() {
 	}
 	if(movemode==1){
 		analogWrite(3, 0); 
-		analogWrite(6, 0);
+		analogWrite(6, 150);
 		analogWrite(10, 0);
-		analogWrite(11, 0);
+		analogWrite(11, 150);
 	}
 	if(movemode==2){
 		analogWrite(3, 150); 
@@ -63,10 +67,18 @@ void motors() {
 		analogWrite(10, 150);
 		analogWrite(11, 0);
 	}
+	if(movemode==4){
+		analogWrite(3, 0); 
+		analogWrite(6, 0);
+		analogWrite(10, 0);
+		analogWrite(11, 0);
+	}
+	delay(1000);
 }
 
 void loop() {
 	sendserial();	 // Send information via Serial connection
+	readserial();
 	irscan();	 // Do a full IR sweep
 	motors();	 // Update OUT pin signals for motors	
 
