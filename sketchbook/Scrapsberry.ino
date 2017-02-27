@@ -39,31 +39,16 @@ void sendserial() {
 }
 
 void readserial() {
-	int serreadvalue = -1;
-	String serreadstr;
-	while (Serial.available()) {
-    		serreadstr = Serial.readString();
-		delay(25);
-		serreadvalue = serreadstr.toInt();
-		delay(25);
+	char serreadchar = '';
+	if ( Serial.available() > 0 ) {
+    		serialreadchar = Serial.read();
+		Serial.println(serialreadchar); //debug info
   	}
-	if ( serreadvalue != -1 ) {
-		movemode = serreadvalue;
-		digitalWrite(13, HIGH);
-		delay(500);
-		digitalWrite(13, LOW);
-		delay(500);
-		digitalWrite(13, HIGH);
-		delay(500);
-		digitalWrite(13, LOW);
-		delay(500);
-		Serial.println(serreadvalue);
-		delay(25);
-		Serial.println(serreadstr);
-		delay(25);
-		Serial.println("Test");
-		delay(25);
-	}
+	if ( serreadchar == 'w' ) movemode = 0;
+	if ( serreadchar == 'a' ) movemode = 2;
+	if ( serreadchar == 's' ) movemode = 1;
+	if ( serreadchar == 'd' ) movemode = 3;
+	if ( serreadchar == 'x' ) movemode = 4;
 }
 
 void motors() {
