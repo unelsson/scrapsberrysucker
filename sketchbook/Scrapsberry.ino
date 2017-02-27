@@ -31,12 +31,11 @@ void irscan() {
 
 void sendserial() {
 	int i = 0;
-	/*for (i = 0; i <= 18; i += 1) {
+	for (i = 0; i <= 18; i += 1) {
 		Serial.println(sensorValue[i]);
 		delay(2);				// Delay for Serial data
 	}
-		Serial.println("END OF DATA");*/
-	Serial.println(serreadvalue);
+		Serial.println("END OF DATA");
 }
 
 void readserial() {
@@ -51,6 +50,7 @@ void readserial() {
 		delay(1000);
 		digitalWrite(13, LOW);
 		delay(1000);
+		Serial.println(serreadvalue);
 	}
 }
 
@@ -90,7 +90,7 @@ void motors() {
 }
 
 void loop() {
-	sendserial();	 // Send information via Serial connection
+	//sendserial();	 // Send information via Serial connection
 	readserial();
 	irscan();	 // Do a full IR sweep
 	motors();	 // Update OUT pin signals for motors	
