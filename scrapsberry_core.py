@@ -25,7 +25,7 @@ while 1:
   print(ch)
   if ch=="w":
     print("Pressed w")
-    serialrw.ser.write(struct.pack('I', 0))
+    serialrw.ser.write(b'0')
   if ch=="a":
     print("Pressed a")
     serialrw.ser.write(b'1')
