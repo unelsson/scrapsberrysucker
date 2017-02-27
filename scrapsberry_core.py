@@ -1,16 +1,28 @@
 #!/usr/bin/python3
 import os
 import sys
+import tty
+import termios
 import serialread
 import time
 import cv2
 import numpy as np
 
+def read_ch()
+  fd = sys.stdin.fileno()
+  old_settings = termios.tcgetaddr(fd)
+  try:
+    tty.setraw(sys.stdin.fileno())
+    ch = sys.stdin.read(1)
+  finally:
+    termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+  return ch
+
 while 1:
   x = serialread.ser.readline()
   ##print(x)
-  k = cv2.waitKey(33)
-  print(k)
+  ch = read_ch()
+  print(ch)
   if k==2490368:
     print("UP")
   if k==2424832:
