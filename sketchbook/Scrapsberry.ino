@@ -57,25 +57,28 @@ void motors() {
 		analogWrite(6, 0);
 		analogWrite(10, 255);
 		analogWrite(11, 0);
-		irscan();
+		delay(100);
 	}
 	if(movemode==1){
 		analogWrite(3, 0); 
-		analogWrite(6, 150);
+		analogWrite(6, 255);
 		analogWrite(10, 0);
-		analogWrite(11, 150);
+		analogWrite(11, 255);
+		delay(100);
 	}
 	if(movemode==2){
 		analogWrite(3, 255); 
 		analogWrite(6, 0);
 		analogWrite(10, 0);
 		analogWrite(11, 255);
+		delay(50);
 	}
 	if(movemode==3){
 		analogWrite(3, 0); 
 		analogWrite(6, 255);
 		analogWrite(10, 255);
 		analogWrite(11, 0);
+		delay(50);
 	}
 	if(movemode==4){
 		analogWrite(3, 0); 
@@ -83,7 +86,7 @@ void motors() {
 		analogWrite(10, 0);
 		analogWrite(11, 0);
 	}
-	delay(300);
+
 	movemode=4;
 }
 
