@@ -26,9 +26,9 @@ while 1:
   if ch=="w":
     print("Pressed w")
   if ch=="a":
-    print('Pressed a')
+    print("Pressed a")
   if ch=="s":
-    print('Pressed s)
+    print("Pressed s")
   if ch=="d":
     print("Pressed d")
   if ch=="q":  
