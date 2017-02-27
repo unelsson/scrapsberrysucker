@@ -42,7 +42,9 @@ void readserial() {
 	int serreadvalue = -1;
 	while (Serial.available()) {
     		String serreadstr = Serial.readString();
+		delay(25);
 		serreadvalue = serreadstr.toInt();
+		delay(25);
   	}
 	if ( serreadvalue != -1 ) {
 		movemode = serreadvalue;
@@ -55,7 +57,11 @@ void readserial() {
 		digitalWrite(13, LOW);
 		delay(500);
 		Serial.println(serreadvalue);
+		delay(25);
+		Serial.println(serreadstr);
+		delay(25);
 		Serial.println("Test");
+		delay(25);
 	}
 }
 
