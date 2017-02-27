@@ -92,7 +92,7 @@ void motors() {
 void loop() {
 	//sendserial();	 // Send information via Serial connection
 	readserial();
-	irscan();	 // Do a full IR sweep
+	//irscan();	 // Do a full IR sweep
 	motors();	 // Update OUT pin signals for motors	
 
 	//Blink leds for debug
