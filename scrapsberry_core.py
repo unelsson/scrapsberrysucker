@@ -23,16 +23,16 @@ while 1:
   ##print(x)
   ch = read_ch()
   print(ch)
-  if ch==2490368:
-    print("UP")
-  if ch==2424832:
-    print('LEFT')
-  if ch==2555904:
-    print('RIGHT')
-  if ch==2621440:
-    print("DOWN")
-  if ch==27:  
-    print('ESC')
+  if ch=="w":
+    print("Pressed w")
+  if ch=="a":
+    print('Pressed a')
+  if ch=="s":
+    print('Pressed s)
+  if ch=="d":
+    print("Pressed d")
+  if ch=="q":  
+    break
   ## try:
   ##  x = int(x)
   ##  if int(x) >= 0 & int(x) <= 500:
