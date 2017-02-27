@@ -19,8 +19,9 @@ while 1:
   if k==2621440:
     print('DOWN')
   time.sleep(1)
-  x = int(x)
-  if int(x) >= 0 & int(x) <= 500:
+  try:
+    x = int(x)
+    if int(x) >= 0 & int(x) <= 500:
     for i in range(0, x, 25):
       print ('#', end='')
   except ValueError:
