@@ -10,7 +10,7 @@ import numpy as np
 
 def read_ch():
   fd = sys.stdin.fileno()
-  old_settings = termios.tcgetaddr(fd)
+  old_settings = termios.tcgetattr(fd)
   try:
     tty.setraw(sys.stdin.fileno())
     ch = sys.stdin.read(1)
