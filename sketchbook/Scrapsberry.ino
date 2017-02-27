@@ -39,17 +39,21 @@ void sendserial() {
 }
 
 void readserial() {
-	int serreadvalue = Serial.read();
+	int serreadvalue = -1;
+	while (Serial.available()) {
+    		char serreadchar = (char)Serial.read();
+		serreadvalue = toInt(serreadchar);
+  	}
 	if ( serreadvalue != -1 ) {
 		movemode = serreadvalue;
 		digitalWrite(13, HIGH);
-		delay(1000);
+		delay(500);
 		digitalWrite(13, LOW);
-		delay(1000);
+		delay(500);
 		digitalWrite(13, HIGH);
-		delay(1000);
+		delay(500);
 		digitalWrite(13, LOW);
-		delay(1000);
+		delay(500);
 		Serial.println(serreadvalue);
 	}
 }
@@ -60,6 +64,7 @@ void motors() {
 		analogWrite(6, 0);
 		analogWrite(10, 150);
 		analogWrite(11, 0);
+		irscan();
 	}
 	if(movemode==1){
 		analogWrite(3, 0); 
