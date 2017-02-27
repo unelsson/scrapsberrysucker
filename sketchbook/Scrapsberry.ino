@@ -40,8 +40,9 @@ void sendserial() {
 
 void readserial() {
 	int serreadvalue = -1;
+	String serreadstr;
 	while (Serial.available()) {
-    		String serreadstr = Serial.readString();
+    		serreadstr = Serial.readString();
 		delay(25);
 		serreadvalue = serreadstr.toInt();
 		delay(25);
