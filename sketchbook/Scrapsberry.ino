@@ -41,8 +41,8 @@ void sendserial() {
 void readserial() {
 	char serreadchar = '';
 	if ( Serial.available() > 0 ) {
-    		serialreadchar = Serial.read();
-		Serial.println(serialreadchar); //debug info
+    		serreadchar = Serial.read();
+		Serial.println(serreadchar); //debug info
   	}
 	if ( serreadchar == 'w' ) movemode = 0;
 	if ( serreadchar == 'a' ) movemode = 2;
