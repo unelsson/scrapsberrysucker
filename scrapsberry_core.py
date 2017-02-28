@@ -30,7 +30,7 @@ while 1:
     break
   if serialrw.ser.in_waiting > 19: 
     serialrw.ser.flush()
-  if serialrw.ser.in_waiting = 19:
+  if serialrw.ser.in_waiting == 19:
     try:
       for i in range(0, 19): #Receive values
         serread = serialrw.ser.readline()
