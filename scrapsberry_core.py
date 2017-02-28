@@ -30,9 +30,9 @@ while 1:
   if ch=="g":
     try:
       x = serialrw.ser.readline()
+      print(x.decode('ascii'))
       x = int(x)
       if int(x) >= 0 & int(x) <= 500:
-        print(x.decode('ascii'))
         for i in range(0, x, 25):
           print ('#', end='')
     except ValueError:
