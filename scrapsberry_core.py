@@ -15,7 +15,7 @@ import select
 import tty
 import termios
 
-class nbc(object):
+class NonBlockingConsole(object):
 
     def __enter__(self):
         self.old_settings = termios.tcgetattr(sys.stdin)
@@ -31,29 +31,29 @@ class nbc(object):
         return False
    
 def main():
-  ch = nbc()
-  while 1:
-    print(ch.get_data())
-    time.sleep(0.25)
-    if ch.get_data() != 'False' :
-        chsend = 'butt'
-        serialrw.ser.write(bytes(chsend, 'ascii')); # Send pressed character to Arduino as bytes
-    if ch=="q":  
-      break
-    print(serialrw.ser.inWaiting())
-    if serialrw.ser.inWaiting() > 18: 
-      serialrw.ser.flush()
-    if serialrw.ser.inWaiting() == 18:
-      try:
-        for i in range(0, 19): #Receive values
-          serread = serialrw.ser.readline()
-          print(serread.decode('ascii'))
-          j = int(serread)
-          #if j >= 0 & j <= 500:
-          #for i in range(0, j, 25):
-          #  print('#', end='')
-          #print('')
-      except ValueError:
-        print('Invalid read')
+  with NonBlockingConsole() as nbc:  
+    while 1:
+      print(nbc.get_data())
+      time.sleep(0.25)
+      if nbc.get_data() != 'False' :
+        ch = 'g'
+        serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
+      if ch=="q":  
+        break
+      print(serialrw.ser.inWaiting())
+      if serialrw.ser.inWaiting() > 18: 
+        serialrw.ser.flush()
+      if serialrw.ser.inWaiting() == 18:
+        try:
+          for i in range(0, 19): #Receive values
+            serread = serialrw.ser.readline()
+            print(serread.decode('ascii'))
+            j = int(serread)
+            #if j >= 0 & j <= 500:
+            #for i in range(0, j, 25):
+            #  print('#', end='')
+            #print('')
+        except ValueError:
+          print('Invalid read')
         
 main()
