@@ -25,7 +25,6 @@ class nbc(object):
     def __exit__(self, type, value, traceback):
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
 
-
     def get_data(self):
         if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
             return sys.stdin.read(1)
@@ -34,7 +33,8 @@ class nbc(object):
 def main():
   while 1:
     #ch = read_ch()
-    print(nbc.get_data())
+    ch = nbc.get_data()
+    print(ch)
     serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
     if ch=="q":  
       break
