@@ -29,7 +29,7 @@ while 1:
     break
   if ch=="g": #Send IR scan command to Arduino
     try:
-      for i in range(0, 19) #Receive values
+      for i in range(0, 19): #Receive values
         serread = serialrw.ser.readline()
         print(serread.decode('ascii'))
         j = int(serread)
