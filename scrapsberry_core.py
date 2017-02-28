@@ -25,7 +25,7 @@ def read_ch():
 def read_pgch():
   for event in pygame.event.get():
     if (event.type == KEYDOWN):
-      print event
+      print(event)
         if (event.key == K_q):
           return 'q'
         if (event.key == K_g):
