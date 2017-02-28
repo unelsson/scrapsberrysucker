@@ -33,9 +33,9 @@ class NonBlockingConsole(object):
 def main():
   with NonBlockingConsole() as nbc:  
     while 1:
-      print(nbc.get_data())
       if nbc.get_data() != 'False' :
         ch = nbc.get_data()
+        print(ch)
         serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
       if ch=="q":  
         break
