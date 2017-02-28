@@ -19,7 +19,6 @@ def read_ch():
   return ch
 
 while 1:
-  serread = serialrw.ser.readline()
   serialrw.ser.flush()
   print("Non-decoded:", serread)
   print("Decoded", serread.decode('ascii'))
