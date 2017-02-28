@@ -32,6 +32,7 @@ def read_pgch():
       return '-1'
 
 def main():
+  os.environ["SDL_VIDEODRIVER"] = "dummy"
   pygame.init()
   pygame.display.set_mode((1,1))
   while 1:
