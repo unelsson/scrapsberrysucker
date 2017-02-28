@@ -35,7 +35,8 @@ def main():
   while 1:
     print(ch.get_data())
     time.sleep(0.25)
-    serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
+    if ch.get_data() != 'False' :
+        serialrw.ser.write(bytes(ch.get_data(), 'ascii')); # Send pressed character to Arduino as bytes
     if ch=="q":  
       break
     print(serialrw.ser.inWaiting())
