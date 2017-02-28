@@ -10,8 +10,6 @@ import numpy as np
 import pygame
 from pygame.locals import *
 
-pygame.init()
-
 def read_ch():
   fd = sys.stdin.fileno()
   old_settings = termios.tcgetattr(fd)
@@ -32,27 +30,28 @@ def read_pgch():
         return 'g'
     else:
       return '-1'
-  
-while 1:
-  #ch = read_ch()
-  ch = read_pgch()
-  print(ch)
-  serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
-  if ch=="q":  
-    break
-  print(serialrw.ser.inWaiting())
-  if serialrw.ser.inWaiting() > 18: 
-    serialrw.ser.flush()
-  if serialrw.ser.inWaiting() == 18:
-    try:
-      for i in range(0, 19): #Receive values
-        serread = serialrw.ser.readline()
-        print(serread.decode('ascii'))
-        j = int(serread)
-        #if j >= 0 & j <= 500:
+
+def main()
+  pygame.init()
+  while 1:
+    #ch = read_ch()
+    ch = read_pgch()
+    print(ch)
+    serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
+    if ch=="q":  
+      break
+    print(serialrw.ser.inWaiting())
+    if serialrw.ser.inWaiting() > 18: 
+      serialrw.ser.flush()
+    if serialrw.ser.inWaiting() == 18:
+      try:
+        for i in range(0, 19): #Receive values
+          serread = serialrw.ser.readline()
+          print(serread.decode('ascii'))
+          j = int(serread)
+          #if j >= 0 & j <= 500:
           #for i in range(0, j, 25):
           #  print('#', end='')
           #print('')
-    except ValueError:
-      print('Invalid read')        
-  
+      except ValueError:
+        print('Invalid read') 
