@@ -20,7 +20,7 @@ def read_ch():
 
 while 1:
   serread = serialrw.ser.readline()
-  serialrw.ser.reset_input_buffer()
+  serialrw.ser.flushInput()
   print("Non-decoded:", serread)
   print("Decoded", serread.decode('ascii'))
   ch = read_ch()
