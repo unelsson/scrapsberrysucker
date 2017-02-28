@@ -112,8 +112,8 @@ def read_ch_kbhit():
 
 def main():
   while 1:
-    ch = read_ch()
     read_ch_kbhit()
+    #ch = read_ch()
     print(ch)
     serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
     if ch=="q":  
