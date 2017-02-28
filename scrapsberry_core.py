@@ -10,111 +10,31 @@ import numpy as np
 import atexit
 from select import select
 
-class KBHit:
+import sys
+import select
+import tty
+import termios
 
-    def __init__(self):
-        '''Creates a KBHit object that you can call to do various keyboard things.
-        '''
+class nbc(object):
 
-        if os.name == 'nt':
-            pass
+    def __enter__(self):
+        self.old_settings = termios.tcgetattr(sys.stdin)
+        tty.setcbreak(sys.stdin.fileno())
+        return self
 
-        else:
-
-            # Save the terminal settings
-            self.fd = sys.stdin.fileno()
-            self.new_term = termios.tcgetattr(self.fd)
-            self.old_term = termios.tcgetattr(self.fd)
-
-            # New terminal setting unbuffered
-            self.new_term[3] = (self.new_term[3] & ~termios.ICANON & ~termios.ECHO)
-            termios.tcsetattr(self.fd, termios.TCSAFLUSH, self.new_term)
-
-            # Support normal-terminal reset at exit
-            atexit.register(self.set_normal_term)
+    def __exit__(self, type, value, traceback):
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
 
 
-    def set_normal_term(self):
-        ''' Resets to normal terminal.  On Windows this is a no-op.
-        '''
-
-        if os.name == 'nt':
-            pass
-
-        else:
-            termios.tcsetattr(self.fd, termios.TCSAFLUSH, self.old_term)
-
-
-    def getch(self):
-        ''' Returns a keyboard character after kbhit() has been called.
-            Should not be called in the same program as getarrow().
-        '''
-
-        s = ''
-
-        if os.name == 'nt':
-            return msvcrt.getch().decode('utf-8')
-
-        else:
+    def get_data(self):
+        if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
             return sys.stdin.read(1)
-
-
-    def getarrow(self):
-        ''' Returns an arrow-key code after kbhit() has been called. Codes are
-        0 : up
-        1 : right
-        2 : down
-        3 : left
-        Should not be called in the same program as getch().
-        '''
-
-        if os.name == 'nt':
-            msvcrt.getch() # skip 0xE0
-            c = msvcrt.getch()
-            vals = [72, 77, 80, 75]
-
-        else:
-            c = sys.stdin.read(3)[2]
-            vals = [65, 67, 66, 68]
-
-        return vals.index(ord(c.decode('utf-8')))
-
-
-    def kbhit(self):
-        ''' Returns True if keyboard character was hit, False otherwise.
-        '''
-        if os.name == 'nt':
-            return msvcrt.kbhit()
-
-        else:
-            dr,dw,de = select([sys.stdin], [], [], 0)
-            return dr != []
-
-def read_ch():
-  fd = sys.stdin.fileno()
-  old_settings = termios.tcgetattr(fd)
-  try:
-    tty.setraw(sys.stdin.fileno())
-    ch = sys.stdin.read(1)
-  finally:
-    termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-  return ch
-
-def read_ch_kbhit():
-  kb = KBHit()
-  if kb.kbhit():
-    c = kb.getch()
-    #if ord(c) == 27: # ESC
-    print(c)
-    kb.set_normal_term()
-    return c
-
-
+        return False
+   
 def main():
   while 1:
-    read_ch_kbhit()
     #ch = read_ch()
-    print(ch)
+    print(nbc.get_data())
     serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
     if ch=="q":  
       break
