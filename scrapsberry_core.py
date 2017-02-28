@@ -27,7 +27,7 @@ while 1:
   serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
   if ch=="q":  
     break
-  if ch=="g"
+  if ch=="g":
   try:
     x = serialrw.ser.readline()
     x = int(x)
