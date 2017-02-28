@@ -31,7 +31,7 @@ def read_pgch():
     else:
       return '-1'
 
-def main()
+def main():
   pygame.init()
   while 1:
     #ch = read_ch()
