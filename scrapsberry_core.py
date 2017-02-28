@@ -35,6 +35,7 @@ def main():
     #ch = read_ch()
     ch = nbc.get_data()
     print(ch)
+    time.sleep(0.25)
     serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
     if ch=="q":  
       break
