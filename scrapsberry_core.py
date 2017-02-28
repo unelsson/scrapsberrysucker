@@ -37,6 +37,6 @@ while 1:
           for i in range(0, j, 25):
             print('#', end='')
           print('')
-      except ValueError:
-        print('Invalid read')        
+    except ValueError:
+      print('Invalid read')        
   
