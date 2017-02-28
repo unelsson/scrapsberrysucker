@@ -7,6 +7,10 @@ import serialrw
 import time
 import cv2
 import numpy as np
+import pygame
+from pygame.locals import *
+
+pygame.init()
 
 def read_ch():
   fd = sys.stdin.fileno()
@@ -18,8 +22,20 @@ def read_ch():
     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
   return ch
 
+def read_pgch():
+  for event in pygame.event.get():
+    if (event.type == KEYDOWN):
+      print event
+        if (event.key == K_q):
+          return 'q'
+        if (event.key == K_g):
+          return 'g'
+    else:
+      return '-1'
+  
 while 1:
-  ch = read_ch()
+  #ch = read_ch()
+  ch = readpgch()
   print(ch)
   serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
   if ch=="q":  
