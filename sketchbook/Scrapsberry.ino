@@ -20,20 +20,21 @@ void setup() {
 void irscan() {
 	for (servoPos = 0; servoPos <= 180; servoPos += 10) {	// Sweep servo loop
 		irservo.write(servoPos);	// Move servo
-		delay(20);			// Wait until servo has moved
+		delay(50);			// Wait until servo has moved
 
 		sensorValue[servoPos/10] = analogRead(analogInPin);	// Read IR sensor value
 
 	}
 	irservo.write(0);				// Send servo to left
-	delay(100);					// Servo move delay
+	delay(200);					// Servo move delay
 }
 
 void sendserial() {
 	int i = 0;
 	for (i = 0; i <= 18; i += 1) {
+		//Serial.print(i); //Debug line
 		Serial.println(sensorValue[i]);		// Send IR sensor values
-		delay(2);				// Delay for Serial data
+		delay(5);				// Delay for Serial data
 	}
 		Serial.println("END OF DATA");
 }
