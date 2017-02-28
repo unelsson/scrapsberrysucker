@@ -24,7 +24,7 @@ while 1:
   print("Decoded", x.decode('ascii'))
   ch = read_ch()
   print(ch)
-  serialrw.ser.write(bytes(ch), 'ascii'); # Send pressed character to Arduino as bytes
+  serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
   if ch=="q":  
     break
   ## try:
