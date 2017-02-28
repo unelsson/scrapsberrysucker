@@ -33,6 +33,7 @@ def read_pgch():
 
 def main():
   pygame.init()
+  pygame.display.set_mode((1,1))
   while 1:
     #ch = read_ch()
     ch = read_pgch()
