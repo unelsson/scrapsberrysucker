@@ -54,4 +54,6 @@ def main():
           #  print('#', end='')
           #print('')
       except ValueError:
-        print('Invalid read') 
+        print('Invalid read')
+        
+main()
