@@ -32,7 +32,7 @@ class NonBlockingConsole(object):
    
 def main():
   with NonBlockingConsole() as nbc:  
-    ch = ''
+    ch = '\0'
     while 1:
       if nbc.get_data() != False :
         ch = nbc.get_data()
