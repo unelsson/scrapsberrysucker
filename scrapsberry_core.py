@@ -35,7 +35,7 @@ def read_pgch():
   
 while 1:
   #ch = read_ch()
-  ch = readpgch()
+  ch = read_pgch()
   print(ch)
   serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
   if ch=="q":  
