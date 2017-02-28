@@ -20,8 +20,6 @@ def read_ch():
 
 while 1:
   serialrw.ser.flush()
-  print("Non-decoded:", serread)
-  print("Decoded", serread.decode('ascii'))
   ch = read_ch()
   print(ch)
   serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
