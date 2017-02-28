@@ -28,9 +28,10 @@ while 1:
   serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
   if ch=="q":  
     break
-  if ch=="g": #Send IR scan command to Arduino
+  if serialrw.ser.in_waiting > 19: 
+    serialrw.ser.flush()
+  if serialrw.ser.in_waiting = 19:
     try:
-      time.sleep(0.8) #Let Arduino scan and send data
       for i in range(0, 19): #Receive values
         serread = serialrw.ser.readline()
         print(serread.decode('ascii'))
