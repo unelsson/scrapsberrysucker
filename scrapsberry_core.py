@@ -19,23 +19,24 @@ def read_ch():
   return ch
 
 while 1:
-  x = serialrw.ser.readline()
-  print("Non-decoded:", x)
-  print("Decoded", x.decode('ascii'))
+  serread = serialrw.ser.readline()
+  print("Non-decoded:", serread)
+  print("Decoded", serread.decode('ascii'))
   ch = read_ch()
   print(ch)
   serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
   if ch=="q":  
     break
-  if ch=="g":
+  if ch=="g": #Send IR scan command to Arduino
     try:
-      x = serialrw.ser.readline()
-      print(x.decode('ascii'))
-      x = int(x)
-      if int(x) >= 0 & int(x) <= 500:
-        for i in range(0, x, 25):
-          print ('#', end='')
-    except ValueError:
-      print('Invalid read')
-      time.sleep(0.5)
+      for i in range(0, 19) #Receive values
+        serread = serialrw.ser.readline()
+        print(serread.decode('ascii'))
+        j = int(serread)
+        if j >= 0 & j <= 500:
+          for i in range(0, j, 25):
+            print('#', end='')
+          print('')
+      except ValueError:
+        print('Invalid read')        
   
