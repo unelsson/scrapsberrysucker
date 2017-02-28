@@ -31,10 +31,9 @@ class nbc(object):
         return False
    
 def main():
+  ch = nbc()
   while 1:
-    #ch = read_ch()
-    ch = nbc.get_data()
-    print(ch)
+    print(ch.get_data())
     time.sleep(0.25)
     serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
     if ch=="q":  
