@@ -25,9 +25,9 @@ while 1:
   serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
   if ch=="q":  
     break
-  if serialrw.ser.inWaiting() > 19: 
+  if serialrw.ser.inWaiting() > 18: 
     serialrw.ser.flush()
-  if serialrw.ser.inWaiting() == 19:
+  if serialrw.ser.inWaiting() == 18:
     try:
       for i in range(0, 19): #Receive values
         serread = serialrw.ser.readline()
