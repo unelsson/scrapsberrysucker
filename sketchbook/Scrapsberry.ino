@@ -32,18 +32,17 @@ void irscan() {
 void sendserial() {
 	int i = 0;
 	for (i = 0; i <= 18; i += 1) {
-		//Serial.print(i); //Debug line
+		// Serial.print(i); //Debug line
+		// Serial.print("-"); //Debug line
 		Serial.println(sensorValue[i]);		// Send IR sensor values
 		delay(5);				// Delay for Serial data
 	}
-		Serial.println("END OF DATA");
 }
 
 void readserial() {
 	char serreadchar = '\0';
 	if ( Serial.available() > 0 ) {
     		serreadchar = Serial.read(); // read command from Raspi
-		Serial.println(serreadchar); // debug info
   	}
 	if ( serreadchar == 'w' ) movemode = 0; // Forwads
 	if ( serreadchar == 'a' ) movemode = 2; // Left

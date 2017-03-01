@@ -7,53 +7,43 @@ import serialrw
 import time
 import cv2
 import numpy as np
-import atexit
-from select import select
 
-import sys
-import select
-import tty
-import termios
+serreaddata = ['/0']*19
+ch = 0
 
-class NonBlockingConsole(object):
+def read_ch():
+  fd = sys.stdin.fileno()
+  old_settings = termios.tcgetattr(fd)
+  try:
+    tty.setraw(sys.stdin.fileno())
+    ch = sys.stdin.read(1)
+  finally:
+    termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+  return ch
 
-    def __enter__(self):
-        self.old_settings = termios.tcgetattr(sys.stdin)
-        tty.setcbreak(sys.stdin.fileno())
-        return self
-
-    def __exit__(self, type, value, traceback):
-        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.old_settings)
-
-    def get_data(self):
-        if select.select([sys.stdin], [], [], 0) == ([sys.stdin], [], []):
-            return sys.stdin.read(1)
-        return False
-   
-def main():
-  with NonBlockingConsole() as nbc:  
-    ch = '\0'
-    while 1:
-      if nbc.get_data() != False :
-        ch = nbc.get_data()
-        print(ch)
-        serialrw.ser.write(bytes(ch, 'ascii')); # Send pressed character to Arduino as bytes
-      if ch=="q":  
-        break
-      print(serialrw.ser.inWaiting())
-      if serialrw.ser.inWaiting() > 18: 
-        serialrw.ser.flush()
-      if serialrw.ser.inWaiting() == 18:
-        try:
-          for i in range(0, 19): #Receive values
-            serread = serialrw.ser.readline()
-            print(serread.decode('ascii'))
-            j = int(serread)
-            #if j >= 0 & j <= 500:
-            #for i in range(0, j, 25):
-            #  print('#', end='')
-            #print('')
-        except ValueError:
-          print('Invalid read')
-        
-main()
+while 1:
+  print('You pressed',ch)
+  print('Press W,A,S or D for movement, G for IR scan')
+  print('Serial queue waiting (should be 0)', serialrw.ser.inWaiting())
+  print(serreaddata)
+  ch = read_ch()
+  if ch=="w":
+    serialrw.ser.write(b'w')
+  if ch=="a":
+    serialrw.ser.write(b'a')
+  if ch=="s":
+    serialrw.ser.write(b's')
+  if ch=="d":
+    serialrw.ser.write(b'd')
+  if ch=="q":  
+    break
+  if ch=="g":
+    serialrw.ser.write(b'g')
+    time.sleep(2.5)
+    try:
+      for i in range(0, 19):
+        serread = serialrw.ser.readline()
+        serreaddata[i] = serread.decode('ascii').strip('\r\n')
+    except ValueError:
+      print('Invalid read')
+  
