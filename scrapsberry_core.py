@@ -8,7 +8,14 @@ import time
 import cv2
 import numpy as np
 
-serreaddata = ['/0']*19
+serreaddata = ['/0']*19 #List for storing latest IR scan data
+irdistdata = ['/0']*19 #Latest IR scan data converted to distances
+
+mapsize = 100		#Map settings, robotx and roboty are map coordinates
+map = np.zeros((mapsize,mapsize))
+robotx = mapsize / 2
+roboty = mapsize / 2
+
 ch = 0
 
 def read_ch():
@@ -44,6 +51,12 @@ while 1:
       for i in range(0, 19):
         serread = serialrw.ser.readline()
         serreaddata[i] = serread.decode('ascii').strip('\r\n')
+        irdistdata[i] = int(serreaddata[i]) #This should be a conversion formula
+        if i < 9 & irdistdata[i] > 100 :
+          visionx = robotx - math.sin(i*10)*irdistdata[i]#This code does not yet take
+          visiony = roboty - math.cos(i*10)*irdistdata[i]#in account robotheading!
+          if visionx > 0 & visiony > 0 & visionx < mapsize & visiony < mapsize:
+            map[visionx,visiony] = 2
     except ValueError:
       print('Invalid read')
   
