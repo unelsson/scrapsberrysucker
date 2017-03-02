@@ -13,9 +13,12 @@ serreaddata = ['/0']*19 #List for storing latest IR scan data
 irdistdata = ['/0']*19 #Latest IR scan data converted to distances
 
 mapsize = 100		#Map settings, robotx and roboty are map coordinates
-map = np.zeros((mapsize,mapsize)) #1 unit of map is 10cm
+#map = np.zeros((mapsize,mapsize)) #OLD MAP, 1 unit of map is 10cm
+map = np.zeros((mapsize,mapsize,3), np.uint8); #Opencv2 img-type map greyscale
 robotx = mapsize / 2
 roboty = mapsize / 2
+visionx = 0
+visiony = 0
 robotangle = 0.000
 
 ch = 0
@@ -60,12 +63,15 @@ while 1:
       for i in range(0, 19):
         serread = serialrw.ser.readline()
         serreaddata[i] = serread.decode('ascii').strip('\r\n')
-        irdistdata[i] = int(serreaddata[i]) #This should be a conversion formula
-        if irdistdata[i] > 100 :
-          visionx = robotx + math.sin(robotangle-i*1.174)*irdistdata[i]#This code does not yet take
-          visiony = roboty + math.cos(robotangle-i*1.174)*irdistdata[i]#in account robotheading!
-          if visionx > 0 & visiony > 0 & visionx < mapsize & visiony < mapsize:
-            map[visionx,visiony] = 2
+        irdistdata[i] = -int(serreaddata[i])/100+6 #Convert str to int, sensordata -> distancedata
+        if int(irdistdata[i]) > 0 & int(irdistdata[i]) < 6:
+          visionx = round(robotx + math.sin(robotangle-i*0.174)*irdistdata[i])#This code does not yet take
+          visiony = round(roboty + math.cos(robotangle-i*0.174)*irdistdata[i])#in account robotheading!
+          print('DEBUG, we got this far!', visionx, visiony)
+          if visionx > 0 & visionx < mapsize & visiony > 0 & visiony < mapsize:
+            map[visionx,visiony] = [255,255,255]
+            print('DEBUG, we got as far as we wanted!')
+        cv2.imwrite('robomap.png', map)
     except ValueError:
       print('Invalid read')
   
