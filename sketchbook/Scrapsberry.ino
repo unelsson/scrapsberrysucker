@@ -20,7 +20,7 @@ void setup() {
 void irscan() {
 	for (servoPos = 0; servoPos <= 180; servoPos += 10) {	// Sweep servo loop
 		irservo.write(servoPos);	// Move servo
-		delay(50);			// Wait until servo has moved
+		delay(100);			// Wait until servo has moved
 
 		sensorValue[servoPos/10] = analogRead(analogInPin);	// Read IR sensor value
 
@@ -61,7 +61,7 @@ void motors() {
 		analogWrite(6, 0);
 		analogWrite(10, 255);
 		analogWrite(11, 0);
-		delay(250);
+		delay(350);
 	}
 	if(movemode==1){
 		analogWrite(3, 0); 
@@ -75,14 +75,14 @@ void motors() {
 		analogWrite(6, 0);
 		analogWrite(10, 0);
 		analogWrite(11, 255);
-		delay(50);
+		delay(150);
 	}
 	if(movemode==3){
 		analogWrite(3, 0); 
 		analogWrite(6, 255);
 		analogWrite(10, 255);
 		analogWrite(11, 0);
-		delay(50);
+		delay(150);
 	}
 	if(movemode==4){
 		analogWrite(3, 0); 
