@@ -8,6 +8,7 @@ import time
 import cv2
 import numpy as np
 import math
+import urllib.request
 
 serreaddata = ['/0']*19 #List for storing latest IR scan data
 irdistdata = ['/0']*19 #Latest IR scan data converted to distances
@@ -20,6 +21,13 @@ roboty = mapsize / 2
 visionx = 0
 visiony = 0
 robotangle = 0.000
+ 
+# This code was modified from pyimagesearch.com
+# Test code for opening a snapshot to opencv2 from mjpg-streamer
+resp = urllib.request.urlopen('http://127.0.0.1:8080/?action=snapshot" /')
+image = np.asarray(bytearray(resp.read()), dtype="uint8")
+image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+cv2.imwrite('camerass.jpg',image)
 
 ch = 0
 
