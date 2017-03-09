@@ -47,12 +47,10 @@ def read_ch():
 
 def moveparticles(move, turn):     #move forward in cm*10, turn right in radian
     for i in range(0, particles):
-        particlefilter[i,0] = particlefilter[i,0] + math.sin(robotangle)*move
-        particlefilter[i,1] = particlefilter[i,1] + math.cos(robotangle)*move
         particlefilter[i,2] = particlefilter[i,2] + turn
-        particlefilter[i,3] = particlefilter[i,3] + 0.1
-        #robotx=robotx+math.sin(robotangle)*2 #Assuming 20cm movement
-        #roboty=roboty+math.cos(robotangle)*2
+        particlefilter[i,0] = particlefilter[i,0] + math.sin(particlefilter[i,2])*move
+        particlefilter[i,1] = particlefilter[i,1] + math.cos(particlefilter[i,2])*move
+        particlefilter[i,3] = particlefilter[i,3]
 
 while 1:
     print('You pressed',ch)
@@ -64,20 +62,22 @@ while 1:
     ch = read_ch()
     if ch=="w":
         serialrw.ser.write(b'w')
-        moveparticles(2, 0) #20cm, 0 angle turn
+        moveparticles(2, 0)       #20cm, 0 angle turn
     if ch=="a":
         serialrw.ser.write(b'a')
-        robotangle = robotangle - 0.52 #30 degrees of turn
+        moveparticles(0, -0.52)   #-30 degrees
     if ch=="s":
         serialrw.ser.write(b's')
-        robotx=robotx-math.sin(robotangle)*1 #Assuming 10cm movement
-        roboty=roboty-math.cos(robotangle)*1
+        moveparticles(-1, 0)      #-10cm, 0 angle turn
     if ch=="d":
         serialrw.ser.write(b'd')
-        robotangle = robotangle + 0.52 #30 degrees of turn
+        moveparticles(0, 0.52)    #+30 degrees
     if ch=="q":  
         break
     if ch=="g":
+        robotangle = particlefilter[0,2] #Use best values for map
+        robotx = particlefilter[0,0]
+        roboty = particlefilter[0,1]
         serialrw.ser.write(b'g')
         time.sleep(2.5)
         try:
