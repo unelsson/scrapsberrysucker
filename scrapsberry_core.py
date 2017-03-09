@@ -21,15 +21,19 @@ roboty = mapsize / 2
 visionx = 0
 visiony = 0
 robotangle = 0.000
+
+dtype = [('x', int), ('y', int), ('angle', float), ('weight', float)]
+particles = 25 #Amount of particles
+particlefilter = np.array([(robotx, roboty, robotangle, 0.5)]*particles, dtype = dtype)
  
 # This code was modified from pyimagesearch.com
 # Test code for opening a snapshot to opencv2 from mjpg-streamer
-resp = urllib.request.urlopen('http://127.0.0.1:8080/?action=snapshot" /')
-image = np.asarray(bytearray(resp.read()), dtype="uint8")
-image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-cv2.imwrite('camerass.jpg',image)
+#resp = urllib.request.urlopen('http://127.0.0.1:8080/?action=snapshot" /')
+#image = np.asarray(bytearray(resp.read()), dtype="uint8")
+#image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+#cv2.imwrite('camerass.jpg',image)
 
-ch = 0
+ch = 0 #Keyboard input
 
 def read_ch():
   fd = sys.stdin.fileno()
@@ -41,15 +45,21 @@ def read_ch():
     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
   return ch
 
+def moveparticles(move, turn):     #move forward in cm*10, turn right in radian
+  for i in range(0, particles):
+    particlefilter[i] = np.array([60, 60, 0.5, 0.6])
+
 while 1:
   print('You pressed',ch)
   print('Press W,A,S or D for movement, G for IR scan')
   print('Serial queue waiting (should be 0)', serialrw.ser.inWaiting())
   print('X:', robotx, 'Y', roboty, 'Angle', robotangle)
-  print(serreaddata)
+  print('Serial read (IR scan)', serreaddata)
+  print('Particle filter data', particlefilter)
   ch = read_ch()
   if ch=="w":
     serialrw.ser.write(b'w')
+    moveparticles(2, 0) #20cm, 0 angle turn
     robotx=robotx+math.sin(robotangle)*2 #Assuming 20cm movement
     roboty=roboty+math.cos(robotangle)*2
   if ch=="a":
