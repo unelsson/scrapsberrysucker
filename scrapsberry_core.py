@@ -22,7 +22,6 @@ visionx = 0
 visiony = 0
 robotangle = 0.000
 
-#dtype = [('x', int), ('y', int), ('angle', float), ('weight', float)]
 particles = 25 #Amount of particles
 particlefilter = np.array([[robotx, roboty, robotangle, 0.5]]*particles)
  
