@@ -5,6 +5,7 @@ Servo irservo;
 
 int servoPos = 0;		// Servo for IRsensor, position in degrees
 int sensorValue[18];		// IR sensor read value
+int sr[10];			// 10 samples for ir sensor readings
 int movemode = 4;
 
 void setup() {
@@ -15,15 +16,20 @@ void setup() {
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(13, OUTPUT);
+  irservo.write(0);				// Send servo to left
+  delay(500);					// Servo move delay
 }
 
 void irscan() {
-	for (servoPos = 0; servoPos <= 180; servoPos += 10) {	// Sweep servo loop
+	int i = 0;
+	for (servoPos = 0; servoPos <= 150; servoPos += 8) {	// Sweep servo loop
 		irservo.write(servoPos);	// Move servo
-		delay(100);			// Wait until servo has moved
-
-		sensorValue[servoPos/10] = analogRead(analogInPin);	// Read IR sensor value
-
+		delay(50);			// Wait until servo has moved
+		for (i = 0; i < 10; i += 1) {
+			sr[i] = analogRead(analogInPin); //Read IR sensor values to array
+			delay(5);
+		}
+		sensorValue[servoPos/8] = (sr[0]+sr[1]+sr[2]+sr[3]+sr[4]+sr[5]+sr[6]+sr[7]+sr[8]+sr[9]) / 10;	//Average IR sensor values
 	}
 	irservo.write(0);				// Send servo to left
 	delay(200);					// Servo move delay
