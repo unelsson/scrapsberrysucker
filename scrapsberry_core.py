@@ -18,7 +18,8 @@ irdistdata = [0]*19 #Latest IR scan data converted to distances
 
 mapsize = 100		#Map settings, robotx and roboty are map coordinates
 #map = np.zeros((mapsize,mapsize)) #OLD MAP, 1 unit of map is 10cm
-map = np.full((mapsize,mapsize,3), [100,100,100]); #Opencv2 img-type map greyscale
+map = np.full((mapsize,mapsize,3), [100,100,100]);  #Opencv2 img-type map
+map2 = np.full((mapsize,mapsize,3), [100,100,100]); #Map with particlefilterdots
 robotx = mapsize / 2
 roboty = mapsize / 2
 visionx = 0
@@ -103,21 +104,44 @@ def drawmap():
 
 def moveparticles(move, turn):     #move forward in cm*10, turn right in radian
     for i in range(0, particles):
-        particlefilter[i,2] = particlefilter[i,2] + turn
-        particlefilter[i,0] = int(particlefilter[i,0] + math.sin(particlefilter[i,2])*move)
-        particlefilter[i,1] = int(particlefilter[i,1] + math.cos(particlefilter[i,2])*move)
+        particlefilter[i,2] = round(particlefilter[i,2] + turn,3)
+        particlefilter[i,0] = round(particlefilter[i,0] + math.sin(particlefilter[i,2])*move)
+        particlefilter[i,1] = round(particlefilter[i,1] + math.cos(particlefilter[i,2])*move)
         particlefilter[i,3] = particlefilter[i,3]
 
 
 def updateparticles():
     for i in range(0, particles):
-        particlefilter[i,2] = particlefilter[i,2] + (random.random()-0.5)/10
-        particlefilter[i,0] = int(particlefilter[i,0] + random.random()*10-5)
-        particlefilter[i,1] = int(particlefilter[i,1] + random.random()*10-5)
-        particlefilter[i,3] = particlefilter[i,3] + random.random()-0.5
+        particlefilter[i,2] = particlefilter[i,2] + random.randint(0,99)/500
+        particlefilter[i,0] = round(particlefilter[i,0] + random.randint(0,10)-5)
+        particlefilter[i,1] = round(particlefilter[i,1] + random.randint(0,10)-5)
+        particlefilter[i,3] = particlefilter[i,3]
 
 def resampleparticles():
-    return np.flipud(particlefilter[np.argsort(particlefilter[:, 3])])
+    for i in range(0, particles):
+        for j in range(0, 19):
+            seewall = 0
+            k = 0
+            while k < irdistdata[j]+1 and seewall == 0:
+                drawpointerx = round(particlefilter[i,0] + math.sin(particlefilter[i,2]-1.57+j*0.174)*k)
+                drawpointery = round(particlefilter[i,1] + math.cos(particlefilter[i,2]-1.57+j*0.174)*k)
+                if map[drawpointerx, drawpointery, 0] > 122:
+                    seewall = 1
+                    particlefilter[i,3] = particlefilter[i,3] + map[drawpointerx, drawpointery,0]/255
+                k = k + 1
+    maxweight = np.amax(particlefilter[:,3])
+    for i in range(0, particles):
+        particlefilter[i, 3] = particlefilter[i,3] / maxweight
+    sortedparticlefilter = np.flipud(particlefilter[np.argsort(particlefilter[:, 3])])
+    c = 0
+    for i in range(0, particles):
+        if sortedparticlefilter[i,3] < 0.2:
+            sortedparticlefilter[i,0] = sortedparticlefilter[0+c, 0] + random.randint(0, 4) - 2
+            sortedparticlefilter[i,1] = sortedparticlefilter[0+c, 0] + random.randint(0, 4) - 2
+            sortedparticlefilter[i,2] = sortedparticlefilter[0+c, 0] + random.randint(0,100) / 500
+            sortedparticlefilter[i,3] = 0.5
+            c = c + 1
+    return np.flipud(sortedparticlefilter[np.argsort(sortedparticlefilter[:, 3])])
 
 while 1:
     print('You pressed',ch)
@@ -156,6 +180,9 @@ while 1:
         except ValueError:
             print('Read error! :)')
         drawmap()
-        cv2.imwrite('robomap.png', map)
-    particlefilter = resampleparticles()
+        map2 = map.copy()
+        for i in range(0, particles):
+            map2[particlefilter[i,0], particlefilter[i,1]] = [0,0,255*particlefilter[i,3]]
+        cv2.imwrite('robomap.png', map2)
+        particlefilter = resampleparticles()
   
