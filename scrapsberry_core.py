@@ -71,35 +71,37 @@ def readarduinoserial():
 
 
 def drawmap():
-    for i in range(0, 19):
-        if int(irdistdata[i]) > 0:
-            for k in range(0, irdistdata[i]+1):
-                drawpointerx = round(robotx + math.sin(robotangle-1.57+i*0.174)*k)
-                drawpointery = round(roboty + math.cos(robotangle-1.57+i*0.174)*k)
-                temporaryb = map[drawpointerx, drawpointery,0]
-                temporaryg = map[drawpointerx, drawpointery,1]
-                temporaryr = map[drawpointerx, drawpointery,2]
-                lightenedb = temporaryb + 70
-                lightenedg = temporaryg + 70
-                lightenedr = temporaryr + 70
-                darkenedb = temporaryb - 30
-                darkenedg = temporaryg - 30
-                darkenedr = temporaryr - 30
-                if lightenedb > 255: lightenedb = 255
-                if lightenedg > 255: lightenedg = 255
-                if lightenedr > 255: lightenedr = 255
-                if darkenedb > 255: darkenedb = 255
-                if darkenedg > 255: darkenedg = 255
-                if darkenedr > 255: darkenedr = 255
-                if lightenedb < 0: lightenedb = 0
-                if lightenedg < 0: lightenedg = 0  
-                if lightenedr < 0: lightenedr = 0
-                if darkenedb < 0: darkenedb = 0
-                if darkenedg < 0: darkenedg = 0
-                if darkenedr < 0: darkenedr = 0
-                if drawpointerx > 0 and drawpointerx < mapsize and drawpointery > 0 and drawpointery < mapsize:
-                    if k < irdistdata[i]: map[(drawpointerx, drawpointery)] = [darkenedb,darkenedg,darkenedr]
-                    if k == irdistdata[i] and irdistdata[i] < 9: map[(drawpointerx, drawpointery)] = [lightenedb,lightenedg,lightenedr]
+    for j in range(0, 3):
+        for i in range(0, 19):
+            if int(irdistdata[i]) > 0:
+                for k in range(0, irdistdata[i]+1):
+                    drawpointerx = round(robotx + math.sin(robotangle-1.57+i*0.174)*k)
+                    drawpointery = round(roboty + math.cos(robotangle-1.57+i*0.174)*k)
+                    temporaryb = map[drawpointerx, drawpointery,0]
+                    temporaryg = map[drawpointerx, drawpointery,1]
+                    temporaryr = map[drawpointerx, drawpointery,2]
+                    lightenedb = temporaryb + 40 * particlefilter[j, 3]
+                    lightenedg = temporaryg + 40 * particlefilter[j, 3]
+                    lightenedr = temporaryr + 40 * particlefilter[j, 3]
+                    darkenedb = temporaryb - 5 * particlefilter[j, 3]
+                    darkenedg = temporaryg - 5 * particlefilter[j, 3]
+                    darkenedr = temporaryr - 5 * particlefilter[j, 3]
+                    if lightenedb > 255: lightenedb = 255
+                    if lightenedg > 255: lightenedg = 255
+                    if lightenedr > 255: lightenedr = 255
+                    if darkenedb > 255: darkenedb = 255
+                    if darkenedg > 255: darkenedg = 255
+                    if darkenedr > 255: darkenedr = 255
+                    if lightenedb < 0: lightenedb = 0
+                    if lightenedg < 0: lightenedg = 0  
+                    if lightenedr < 0: lightenedr = 0
+                    if darkenedb < 0: darkenedb = 0
+                    if darkenedg < 0: darkenedg = 0
+                    if darkenedr < 0: darkenedr = 0
+                    if drawpointerx > 0 and drawpointerx < mapsize and drawpointery > 0 and drawpointery < mapsize:
+                        if k < irdistdata[i]: map[(drawpointerx, drawpointery)] = [darkenedb,darkenedg,darkenedr]
+                        if k == irdistdata[i] and irdistdata[i] < 9:
+                            map[(drawpointerx, drawpointery)] = [lightenedb,lightenedg,lightenedr]
 
 
 def moveparticles(move, turn):     #move forward in cm*10, turn right in radian
@@ -107,15 +109,13 @@ def moveparticles(move, turn):     #move forward in cm*10, turn right in radian
         particlefilter[i,2] = particlefilter[i,2] + turn
         particlefilter[i,0] = round(particlefilter[i,0] + math.sin(particlefilter[i,2])*move)
         particlefilter[i,1] = round(particlefilter[i,1] + math.cos(particlefilter[i,2])*move)
-        particlefilter[i,3] = particlefilter[i,3]
 
 
 def updateparticles():
     for i in range(0, particles):
-        particlefilter[i,2] = particlefilter[i,2] + random.randint(0,99)/1000
-        particlefilter[i,0] = round(particlefilter[i,0])
-        particlefilter[i,1] = round(particlefilter[i,1])
-        particlefilter[i,3] = particlefilter[i,3]
+        particlefilter[i,2] = particlefilter[i,2] + random.randint(0,85)/1000
+        particlefilter[i,0] = round(particlefilter[i,0]) + random.randint(0,2)-1
+        particlefilter[i,1] = round(particlefilter[i,1]) + random.randint(0,2)-1
 
 def resampleparticles():
     for i in range(0, particles):
@@ -127,21 +127,20 @@ def resampleparticles():
                 drawpointery = round(particlefilter[i,1] + math.cos(particlefilter[i,2]-1.57+j*0.174)*k)
                 if map[drawpointerx, drawpointery, 0] > 122:
                     seewall = 1
-                    if math.fabs(k-irdistdata[j] < 3):
+                    if math.fabs(k-irdistdata[j] < 2):
                         particlefilter[i,3] = particlefilter[i,3] + map[drawpointerx, drawpointery,0]/255
                 k = k + 1
     maxweight = np.amax(particlefilter[:,3])
-    for i in range(0, particles):
-        particlefilter[i, 3] = particlefilter[i,3] / maxweight
     sortedparticlefilter = np.flipud(particlefilter[np.argsort(particlefilter[:, 3])])
-    c = 0
     for i in range(0, particles):
-        if sortedparticlefilter[i,3] < 0.2 or i > (particles-5):
-            sortedparticlefilter[i,0] = sortedparticlefilter[0+c, 0] + random.randint(0, 4) - 2
-            sortedparticlefilter[i,1] = sortedparticlefilter[0+c, 0] + random.randint(0, 4) - 2
-            sortedparticlefilter[i,2] = sortedparticlefilter[0+c, 0] + random.randint(0,100) / 500
-            sortedparticlefilter[i,3] = 0.5
-            c = c + 1
+        sortedparticlefilter[i, 3] = 1 / (i + 1)
+    c = 0
+    for i in range(particles-3, particles):
+        sortedparticlefilter[i,0] = sortedparticlefilter[0+c, 0] + random.randint(0, 4) - 2
+        sortedparticlefilter[i,1] = sortedparticlefilter[0+c, 0] + random.randint(0, 4) - 2
+        sortedparticlefilter[i,2] = sortedparticlefilter[0+c, 0] + random.randint(0,100) / 500
+        sortedparticlefilter[i,3] = 0.5
+        c = c + 1
     return np.flipud(sortedparticlefilter[np.argsort(sortedparticlefilter[:, 3])])
 
 while 1:
@@ -171,9 +170,9 @@ while 1:
     if ch=="q":  
         break
     if ch=="g":
-        robotangle = particlefilter[0,2] #Use best values for map
-        robotx = particlefilter[0,0]
-        roboty = particlefilter[0,1]
+        #robotangle = particlefilter[0,2] #Use best values for map
+        #robotx = particlefilter[0,0]
+        #roboty = particlefilter[0,1]
         serialrw.ser.write(b'g')
         time.sleep(2.5)
         try:
