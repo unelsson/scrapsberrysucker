@@ -5,11 +5,17 @@ import tty
 import termios
 import serialrw
 import time
+import socket
 import cv2
 import numpy as np
 import math
 import random
 import urllib.request
+
+import tornado.httpserver
+import tornado.websocket
+import tornado.ioloop
+import tornado.web
 
 random.seed()
 
@@ -26,7 +32,7 @@ visionx = 0
 visiony = 0
 robotangle = 0.000
 
-particles = 25 #Amount of particles
+particles = 3 #Amount of particles
 particlefilter = np.array([[round(robotx), round(roboty), robotangle, 0.5]]*particles)
  
 # This code was modified from pyimagesearch.com
@@ -38,6 +44,77 @@ particlefilter = np.array([[round(robotx), round(roboty), robotangle, 0.5]]*part
 
 ch = 0 #Keyboard input
 
+#All code of handling websocket info is here
+#including code for gamepad and stopping websocket/tornado -mode
+
+class WSHandler(tornado.websocket.WebSocketHandler):
+    def open(self):
+        print('New connection was opened')
+        self.write_message("Welcome to my websocket!")
+
+    def on_message(self, message):
+        motorpowerl = 255
+        motorpowerr = 255
+        axisfloata = 0
+        axisfloatb = 0
+        if(message == "stop"):
+            tornado.ioloop.IOLoop.instance().stop()
+        if(message[0:6] == "Axis: "):
+            print('Axis_info_detected YES')
+            axisreadinfo = message.split( ) #"Axis: float float" -> axisreadinfo str array 0 to 2
+            axisfloata = float(axisreadinfo[1]) #str to float
+            axisfloatb = float(axisreadinfo[2]) #str to float
+
+        #convert float gamepad numbers to suitable power outputs
+        if(axisfloata <= 0 and axisfloatb < -0.1):
+            motorpowerl = int(-axisfloatb * 255)
+            motorpowerr = int(-axisfloatb * 255 - (-axisfloata * 255))
+            serialrw.ser.write(b'W')
+        if(axisfloata > 0 and axisfloatb < -0.1):
+            motorpowerl = int(-axisfloatb * 255 - axisfloata * 255)
+            motorpowerr = int(-axisfloatb * 255)
+            serialrw.ser.write(b'W')
+        if(axisfloata <= 0 and axisfloatb > 0.1):
+            motorpowerl = int(axisfloatb * 255)
+            motorpowerr = int(axisfloatb * 255 - (-axisfloata * 255))
+            serialrw.ser.write(b'S')
+        if(axisfloata > 0 and axisfloatb > 0.1):
+            motorpowerl = int(axisfloatb * 255 - axisfloata * 255)
+            motorpowerr = int(axisfloatb * 255)
+            serialrw.ser.write(b'S')
+        if(axisfloata < -0.1 and abs(axisfloatb) < 0.1):
+            motorpowerl = int(-axisfloata * 255)
+            motorpowerr = int(-axisfloata * 255)
+            serialrw.ser.write(b'A')
+        if(axisfloata > 0.1 and abs(axisfloatb) < 0.1):
+            motorpowerl = int(axisfloata * 255)
+            motorpowerr = int(axisfloata * 255)
+            serialrw.ser.write(b'D')
+        if(abs(axisfloata) < 0.1 and abs(axisfloatb) < 0.1): #deadzone
+            motorpowerl = 0
+            motorpowerr = 0
+            serialrw.ser.write(b'x')
+
+        #limit int to 0-255
+        if(motorpowerl > 255): motorpowerl = 255
+        if(motorpowerr > 255): motorpowerr = 255
+        if(motorpowerl < 0): motorpowerl = 0
+        if(motorpowerr < 0): motorpowerr = 0
+
+        motorpowerl = motorpowerl.to_bytes(1, byteorder='big')
+        motorpowerr = motorpowerr.to_bytes(1, byteorder='big')
+        serialrw.ser.write(b'm')
+        serialrw.ser.write(motorpowerl)
+        serialrw.ser.write(motorpowerr)
+        print('motorpowerl:', motorpowerl)
+        print('motorpowerr:', motorpowerr)
+        print('Incoming message:', message)
+
+
+    def on_close(self):
+        print('Connection was closed...')
+
+application = tornado.web.Application([(r'/ws', WSHandler),])
 
 def read_ch():
     fd = sys.stdin.fileno()
@@ -49,6 +126,10 @@ def read_ch():
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return ch
 
+def irdebugmode():  
+    for i in range(0, 9000):
+        serread = serialrw.ser.readline()
+        print(serread.decode('ascii').strip('\r\n'))
 
 def readarduinoserial():
     for i in range(0, 19):
@@ -69,6 +150,12 @@ def readarduinoserial():
         #   235 (0,5 * A4 paper)
         print('debug1')
 
+def readdebugserial(seriallength):
+    print('Serial debug read:')
+    for i in range(0, seriallength): 
+        serread = serialrw.ser.readline()
+        print(serread)
+
 
 def drawmap():
     for j in range(0, 3):
@@ -83,9 +170,9 @@ def drawmap():
                     lightenedb = temporaryb + 40 * particlefilter[j, 3]
                     lightenedg = temporaryg + 40 * particlefilter[j, 3]
                     lightenedr = temporaryr + 40 * particlefilter[j, 3]
-                    darkenedb = temporaryb - 5 * particlefilter[j, 3]
-                    darkenedg = temporaryg - 5 * particlefilter[j, 3]
-                    darkenedr = temporaryr - 5 * particlefilter[j, 3]
+                    darkenedb = temporaryb - 30 * particlefilter[j, 3]
+                    darkenedg = temporaryg - 30 * particlefilter[j, 3]
+                    darkenedr = temporaryr - 30 * particlefilter[j, 3]
                     if lightenedb > 255: lightenedb = 255
                     if lightenedg > 255: lightenedg = 255
                     if lightenedr > 255: lightenedr = 255
@@ -149,11 +236,14 @@ while 1:
     print('Serial queue waiting (should be 0)', serialrw.ser.inWaiting())
     print('X:', robotx, 'Y', roboty, 'Angle', robotangle)
     print('Serial read (IR scan)', serreaddata)
-    print('Particle filter data', particlefilter)
+    #print('Particle filter data', particlefilter)
+
     ch = read_ch()
+
+    #basic movement controls
     if ch=="w":
         serialrw.ser.write(b'w')
-        moveparticles(2, 0)       #20cm, 0 angle turn
+        moveparticles(2, 0)       #30cm, 0 angle turn
         updateparticles()
     if ch=="a":
         serialrw.ser.write(b'a')
@@ -161,18 +251,68 @@ while 1:
         updateparticles()
     if ch=="s":
         serialrw.ser.write(b's')
-        moveparticles(-1, 0)      #-10cm, 0 angle turn
+        moveparticles(-1, 0)      #-20cm, 0 angle turn
         updateparticles()
     if ch=="d":
         serialrw.ser.write(b'd')
         moveparticles(0, 0.52)    #+30 degrees
         updateparticles()
+    if ch=="z":
+        serialrw.ser.write(b'z')
+        moveparticles(0, -0.26)   #-15 degrees
+        updateparticles()
+    if ch=="c":
+        serialrw.ser.write(b'c')
+        moveparticles(0, 0.26)   #+15 degrees
+        updateparticles()
+
+    #servo controls
+    if ch=="h":
+        serialrw.ser.write(b'h')
+    if ch=="j":
+        serialrw.ser.write(b'j')
+    if ch=="k":
+        serialrw.ser.write(b'k')
+    if ch=="l":
+        serialrw.ser.write(b'l')
+	
+    if ch=="o":  
+        serialrw.ser.write(b'o')
+    if ch=="p":  
+        serialrw.ser.write(b'p')
+
+    #motor power controls
+    if ch=="n": #full motor power (255,255)
+        serialrw.ser.write(b'n')
+    if ch=="m": #manual motor power (0-255, 0-255)
+        motorpowerl = int(input("Left motor power (0-255): "))
+        motorpowerl = motorpowerl.to_bytes(1, byteorder='big')
+        motorpowerr = int(input("Right motor power (0-255): "))
+        motorpowerr = motorpowerr.to_bytes(1, byteorder='big')
+        serialrw.ser.write(b'm')
+        print('L send: ', motorpowerl)
+        print('R send: ', motorpowerr)
+        serialrw.ser.write(motorpowerl)
+        serialrw.ser.write(motorpowerr)
+        try:
+            readdebugserial(2)
+        except:
+            print('Read fail')
+
     if ch=="q":  
         break
+
+    #check ir debug values (irdebugmode)
+    if ch=="t":
+        serialrw.ser.write(b't')
+        irdebugmode()
+        serialrw.ser.write(b'y')
+
+    #scan ir with servo, draw readings to a map, update localization
     if ch=="g":
-        #robotangle = particlefilter[0,2] #Use best values for map
-        #robotx = particlefilter[0,0]
-        #roboty = particlefilter[0,1]
+        robotangle = particlefilter[0,2] #Use best values for map
+        robotx = particlefilter[0,0]
+        roboty = particlefilter[0,1]
         serialrw.ser.write(b'g')
         time.sleep(2.5)
         try:
@@ -180,9 +320,14 @@ while 1:
         except ValueError:
             print('Read error! :)')
         drawmap()
-        map2 = map.copy()
-        for i in range(0, particles):
-            map2[particlefilter[i,0], particlefilter[i,1]] = [0,0,255*particlefilter[i,3]]
-        cv2.imwrite('robomap.png', map2)
+        #map2 = map.copy()
+        #for i in range(0, particles):
+        #    map2[particlefilter[i,0], particlefilter[i,1]] = [0,0,255*particlefilter[i,3]]
+        cv2.imwrite('robomap.png', map)
         particlefilter = resampleparticles()
   
+    if ch=="b":
+        print('Gamepad control mode (stop tornado via websocket)')
+        http_server = tornado.httpserver.HTTPServer(application)
+        http_server.listen(8888)
+        tornado.ioloop.IOLoop.instance().start()
