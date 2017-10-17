@@ -1,0 +1,172 @@
+<html>
+<head>
+<title>Robotin ohjaus</title>
+
+<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+
+<script>
+ function refreshIt(element) {
+                setTimeout(function() {
+                    element.src = element.src.split('?')[0] + '?' + new Date().getTime();
+                    refreshIt(element);
+                }, 150); // refresh every 150ms
+            }
+</script>
+
+<script>
+var ws, interval;
+
+ws = new WebSocket("ws://10.8.0.6:8888/ws");
+
+ws.onmessage = function(evt) {
+	logger(evt.data);
+};
+
+ws.onclose = function(evt) { 
+};
+
+ws.onopen = function(evt) {
+	ws.send('Hello!');
+};
+      
+window.addEventListener("gamepadconnected", function(e) {
+  ws.send("Gamepad connected");
+});
+
+window.addEventListener("gamepaddisconnected", function(e) {
+  ws.send("Gamepad disconnected");
+});
+
+if (!('ongamepadconnected' in window)) {
+  // No gamepad events available, poll instead.
+  interval = setInterval(pollGamepads, 150);
+}
+
+function pollGamepads() {
+  var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
+  for (var i = 0; i < gamepads.length; i++) {
+    var gp = gamepads[i];
+    if (gp) {
+      //gp.index + gp.id 
+      //gp.buttons.length 
+      //gp.axes.length + " axes.";
+      ws.send("Axis: " + gp.axes[0] + " " + gp.axes[1]);
+    }
+  }
+}
+
+</script>
+
+</head>
+
+<body>
+
+<iframe height=300px width=350px src="http://10.8.0.6:8090/?action=stream"></iframe> 
+
+ <table style="width:300px">
+  <tr>
+    <th>-</th>
+    <th>
+	<button type="button" id="fw" onclick="fw()">FORWARD!</button>
+	<button type="button" id="fw" onclick="fwsm()">tinyforward</button>
+    </th>
+    <th>-</th>
+  </tr>
+  <tr>
+    <td>
+	<button type="button" id="le" onclick="le()">LEFT!</button>
+	<button type="button" id="le" onclick="lesm()">tinyleft</button>
+    </td>
+    <td>
+	<button type="button" id="bw" onclick="bw()">BACKWARDS!</button>
+	<button type="button" id="bw" onclick="bwsm()">tinybackward</button>
+    </td>
+    <td>
+	<button type="button" id="ri" onclick="ri()">RIGHT!</button>
+	<button type="button" id="ri" onclick="rism()">tinyright</button>
+    </td>
+  </tr>
+</table> 
+
+<button type="button" id="stoptornado" onclick="ws.send('stop')">STOP TORNADO</button>
+
+<script type="text/javascript">
+
+function fw(){
+	jQuery.ajax({
+	   type: "GET",
+	   url: "forward",
+	   success: function (msg) {
+	   }
+	});
+}
+
+function bw(){
+	jQuery.ajax({
+	   type: "GET",
+	   url: "backward",
+	   success: function (msg) {
+	   }
+	});
+}
+
+function fwsm(){
+	jQuery.ajax({
+	   type: "GET",
+	   url: "forwardsm",
+	   success: function (msg) {
+	   }
+	});
+}
+
+function bwsm(){
+	jQuery.ajax({
+	   type: "GET",
+	   url: "backwardsm",
+	   success: function (msg) {
+	   }
+	});
+}
+
+function ri(){
+	jQuery.ajax({
+	   type: "GET",
+	   url: "right",
+	   success: function (msg) {
+	   }
+	});
+}
+
+function le(){
+	jQuery.ajax({
+	   type: "GET",
+	   url: "left",
+	   success: function (msg) {
+	   }
+	});
+}
+
+function rism(){
+	jQuery.ajax({
+	   type: "GET",
+	   url: "rightsm",
+	   success: function (msg) {
+	   }
+	});
+}
+
+function lesm(){
+	jQuery.ajax({
+	   type: "GET",
+	   url: "leftsm",
+	   success: function (msg) {
+	   }
+	});
+}
+
+</script>
+
+<p><img id="robomap" src='map.png' onload="refreshIt(this)"></p>
+
+</body>
+</html>
