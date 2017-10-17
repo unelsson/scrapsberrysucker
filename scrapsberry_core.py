@@ -67,28 +67,28 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
         #convert float gamepad numbers to suitable power outputs
         if(axisfloata <= 0 and axisfloatb < -0.1):
-            motorpowerl = int(-axisfloatb * 255)
-            motorpowerr = int(-axisfloatb * 255 - (-axisfloata * 255))
+            motorpowerl = int((-2*axisfloatb-axisfloatb*axisfloatb) * 255)
+            motorpowerr = int((-2*axisfloatb-axisfloatb*axisfloatb) * 255 - (-axisfloata * 255))
             serialrw.ser.write(b'W')
         if(axisfloata > 0 and axisfloatb < -0.1):
-            motorpowerl = int(-axisfloatb * 255 - axisfloata * 255)
-            motorpowerr = int(-axisfloatb * 255)
+            motorpowerl = int((-2*axisfloatb-axisfloatb*axisfloatb) * 255 - axisfloata * 255)
+            motorpowerr = int((-2*axisfloatb-axisfloatb*axisfloatb) * 255)
             serialrw.ser.write(b'W')
         if(axisfloata <= 0 and axisfloatb > 0.1):
-            motorpowerl = int(axisfloatb * 255)
-            motorpowerr = int(axisfloatb * 255 - (-axisfloata * 255))
+            motorpowerl = int((2*axisfloatb-axisfloatb*axisfloatb) * 255)
+            motorpowerr = int((2*axisfloatb-axisfloatb*axisfloatb) * 255 - (-axisfloata * 255))
             serialrw.ser.write(b'S')
         if(axisfloata > 0 and axisfloatb > 0.1):
-            motorpowerl = int(axisfloatb * 255 - axisfloata * 255)
-            motorpowerr = int(axisfloatb * 255)
+            motorpowerl = int((2*axisfloatb-axisfloatb*axisfloatb) * 255 - axisfloata * 255)
+            motorpowerr = int((2*axisfloatb-axisfloatb*axisfloatb) * 255)
             serialrw.ser.write(b'S')
         if(axisfloata < -0.1 and abs(axisfloatb) < 0.1):
-            motorpowerl = int(-axisfloata * 255)
-            motorpowerr = int(-axisfloata * 255)
+            motorpowerl = int((-2*axisfloata-axisfloata*axisfloata) * 100)
+            motorpowerr = int((-2*axisfloata-axisfloata*axisfloata) * 100)
             serialrw.ser.write(b'A')
         if(axisfloata > 0.1 and abs(axisfloatb) < 0.1):
-            motorpowerl = int(axisfloata * 255)
-            motorpowerr = int(axisfloata * 255)
+            motorpowerl = int((2*axisfloata-axisfloata*axisfloata) * 100)
+            motorpowerr = int((2*axisfloata-axisfloata*axisfloata) * 100)
             serialrw.ser.write(b'D')
         if(abs(axisfloata) < 0.1 and abs(axisfloatb) < 0.1): #deadzone
             motorpowerl = 0
@@ -112,9 +112,13 @@ class WSHandler(tornado.websocket.WebSocketHandler):
 
 
     def on_close(self):
+        serialrw.ser.write(b'x') #stop motors! :)
         print('Connection was closed...')
 
 application = tornado.web.Application([(r'/ws', WSHandler),])
+
+http_server = tornado.httpserver.HTTPServer(application)
+http_server.listen(8888)
 
 def read_ch():
     fd = sys.stdin.fileno()
@@ -328,6 +332,4 @@ while 1:
   
     if ch=="b":
         print('Gamepad control mode (stop tornado via websocket)')
-        http_server = tornado.httpserver.HTTPServer(application)
-        http_server.listen(8888)
         tornado.ioloop.IOLoop.instance().start()

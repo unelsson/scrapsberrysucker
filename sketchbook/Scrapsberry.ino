@@ -50,7 +50,19 @@ void sendserial() {
 }
 
 void motors() {
-	int i = 0;
+	int i = 0, crashread = 0;
+	/*crashread = analogRead(analogInPin);
+	if(crashread > 350){
+		if (movemode == 9 || movemode == 0 || movemode ==4) movemode=13;
+	}
+	if(crashread > 250){
+		if (movemode == 9 || movemode == 0) {
+		movemode=13;
+		motorpowerl=motorpowerl/3;
+		motorpowerr=motorpowerr/3;
+		}
+	}
+	if(crashread < 200 && movemode == 13){movemode = 4;}	*/
 	if(movemode==0){
 		analogWrite(3, motorpowerl); 
 		digitalWrite(6, 0);
@@ -148,6 +160,12 @@ void motors() {
 		analogWrite(6, 0);
 		analogWrite(10, 0);
 		analogWrite(11, 0);
+	}
+	if(movemode==13){ //emergency break/reverse
+		analogWrite(3, 0); 
+		analogWrite(6, 80);
+		analogWrite(10, 0);
+		analogWrite(11, 80);
 	}
 }
 
